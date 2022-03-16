@@ -164,7 +164,7 @@ Crea las ruta `/contact` en `PageController`, y las rutas  `/blog` y `single_pos
 
 Ten en cuenta que en `blog.html` existen rutas a `single_post.html` que deberás cambiar para llamar a la ruta `single_post`
 
- ## 1.3 Menú de navegación
+## 1.3 Menú de navegación
 
 Como habéis podido comprobar, el menú de navegación ha dejado de funcionar ya que apunta a las páginas `.html`
 
@@ -186,14 +186,22 @@ Vamos a crear una `partial` para la navegación.
    
    ```twig
    <ul class="nav navbar-nav">
-       <li class="active lien"><a href="{{ path('index') }}"><i class="fa fa-home sr-icons"></i> Home</a></li>
-       <li class=" lien"><a href="{{ path('about') }}"><i class="fa fa-bookmark sr-icons"></i> About</a></li>
-       <li class=" lien"><a href="{{ path('blog') }}"><i class="fa fa-file-text sr-icons"></i> Blog</a></li>
-       <li><a href="{{ path('contact') }}"><i class="fa fa-phone-square sr-icons"></i> Contact</a></li>
+       <li class="active lien"><a href="{{ path('index') }}">
+       <i class="fa fa-home sr-icons"></i> Home</a>
+       </li>
+       <li class=" lien"><a href="{{ path('about') }}">
+       <i class="fa fa-bookmark sr-icons"></i> About</a>
+       </li>
+    <li class=" lien"><a href="{{ path('blog') }}">
+    <i class="fa fa-file-text sr-icons"></i> Blog</a>
+       </li>
+       <li><a href="{{ path('contact') }}">
+       <i class="fa fa-phone-square sr-icons"></i> Contact</a>
+       </li>
    </ul>
    ```
-{% endraw %}
-
+   {% endraw %}
+   
    Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`. `
 
 
@@ -203,7 +211,8 @@ Por ejemplo, en el caso del enlace a `index` quedará así:
 {% raw %}
 
    ```twig
-<li class="{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}} lien"><a href="{{ path('index') }}"><i class="fa fa-home sr-icons"></i> Home</a></li>
+<li class="{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}} lien">
+<a href="{{ path('index') }}"><i class="fa fa-home sr-icons"></i> Home</a></li>
    ```
 
 {% endraw %} 
@@ -215,4 +224,3 @@ Estamos usando el **operador ternario** `{{ (app.request.attributes.get('_route'
    Modifica la navegación para cada una de las rutas. Ten en cuenta que el menú `blog` se debe activar para las rutas `blog` y `single_post`
 
    > **Nota** En twig se puede utilizar el operador `or`
-
