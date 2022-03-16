@@ -3,6 +3,7 @@ typora-copy-images-to: ../../assets/img/primeros-pasos/
 typora-root-url: ../../
 layout: post
 categories: parte1
+conToc: true
 ---
 
 ## 1.0 ¿Qué aprenderemos?
@@ -22,7 +23,6 @@ composer create-project symfony/website-skeleton symfony-blog
 ```
 
 1. Descargar la plantilla de la web
-
 2. Se descomprime en `public` 
 3. Comprueba que la web funciona
 
@@ -53,7 +53,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PageController extends AbstractController
 {
-    /**
+    /**`
      * @Route("/page", name="app_page")
      */
     public function index(): Response
@@ -83,55 +83,48 @@ Ya podemos probar la página de portada:
 
 ![](/symfony-blog-teoria/assets/img/primeros-pasos/image-20220316084436890.png)
 
-![image-20220316084436890](/symfony-blog-teoria/parte1/assets/primeros-pasos/image-20220316084436890.png)
-
 Todas las páginas comparten la cabecera y el pie de página, así que vamos a crear la plantilla `base.html.twig`.
 
 1. Copia el contenido de `index.html.twig` dentro de `base.html.twig`
 
 2. Ahora `index.html` va a extender la plantilla `base`
-
+{% raw %}
    ```twig
    {% extends 'base.html.twig' %}
    ```
-   
+{% endraw %}
 3. Comprueba que sigue funcionado la portada
 
 4. En la plantilla `base.html.twig` vamos a crear dos bloques:
 
    1. Uno para el título que va a variar en cada página:
       Localiza la etiqueta `title` y modifícala así:
-
+   {% raw %}
+      
       ```twig
       <title>{% block title %}Inicio{% endblock %}</title>
       ```
-
+      {% endraw %}
    2. Otro para el cuerpo de la página:
-      Localiza el código entre
-
+   Localiza el código entre
+   
       ```html
       <div id="index">
       ```
-
-       y 
-
+   y 
       ```html
       </div><!-- End of index box -->
       ```
-
-      Este es el código que va a variar entre página y página. Por tanto vamos a moverlo a la página `index.html.twig` dentro del bloque `body`
-
+   Este es el código que va a variar entre página y página. Por tanto vamos a moverlo a la página `index.html.twig` dentro del bloque `body`
+{% raw %}
+   
       ```twig
       {% block body %}
       //Código cortado de base.html.twig
       {% endblock %}
       ```
+{% endraw %}
 
-      Y en la plantilla `base.html.twig` introduce el siguiente código:
-
-      ```twig
-       {% block body %}{% endblock %}
-      ```
 5. Comprueba que la página sigue funcionado
 
 ### 1.2.2 Ruta `/about` 
@@ -149,6 +142,7 @@ public function about(): Response
 ```
 
 Movemos la página `about.html ` a `/templates/page/about.html.twig`
+{% raw %}
 
 ```twig
 {% extends 'base.html.twig' %}
@@ -160,6 +154,7 @@ Movemos la página `about.html ` a `/templates/page/about.html.twig`
 {% endblock %}
 ```
 
+{% endraw %}
 Comprueba que funciona la ruta `/about`
 
 ### 1.2.3 Reto - Rutas `/contact`, `blog` y `single_post`
@@ -170,8 +165,6 @@ Ten en cuenta que en `blog.html` existen rutas a `single_post.html` que deberás
 
  ## 1.3 Menú de navegación
 
-
-
 Como habéis podido comprobar, el menú de navegación ha dejado de funcionar ya que apunta a las páginas `.html`
 
 ![image-20220316092852146](/symfony-blog-teoria/assets/img/primeros-pasos/image-20220316092852146.png)
@@ -181,13 +174,15 @@ Vamos a crear una `partial` para la navegación.
 1. Identificamos el código de `base.html.twig` que pinta la navegación y lo movemos a `templates/partials/navigation.html.twig`
 
 2. Modificamos `base.html.twig` para que incluya este partial
-
+{% raw %}
+   
    ```twig
    {{ include ('partials/navigation.html.twig')}}
    ```
-   
+{% endraw %}
 3. Ya podemos modificar el partial para que apunte a las nuevas rutas. Hemos de usar la función de twig `path` que nos devuelve el path a una ruta con nombre. Nunca `harcodéis` las rutas que para eso se les asigna un nombre en el controlador. Ten en cuenta que la dirección de la ruta podría cambiar durante el desarrollo del proyecto pero el nombre no debería.
-
+{% raw %}
+   
    ```twig
    <ul class="nav navbar-nav">
        <li class="active lien"><a href="{{ path('index') }}"><i class="fa fa-home sr-icons"></i> Home</a></li>
@@ -196,19 +191,23 @@ Vamos a crear una `partial` para la navegación.
        <li><a href="{{ path('contact') }}"><i class="fa fa-phone-square sr-icons"></i> Contact</a></li>
    </ul>
    ```
+{% endraw %}
 
-   Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`. 
-   
+   Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`. `
+
 
 Vamos a arreglarlo. Para ello hemos de conocer cuál es la ruta activa y añadir la clase `active` a dicha ruta. Existe la función `twig` `app.request.attributes.get('_route')` que nos devuelve dicha ruta. 
 
 Por ejemplo, en el caso del enlace a `index` quedará así:
+{% raw %}
 
    ```twig
-   <li class="{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}} lien"><a href="{{ path('index') }}"><i class="fa fa-home sr-icons"></i> Home</a></li>
+<li class="{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}} lien"><a href="{{ path('index') }}"><i class="fa fa-home sr-icons"></i> Home</a></li>
    ```
 
-   Estamos usando el **operador ternario** `{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}}`
+{% endraw %} 
+
+Estamos usando el **operador ternario** `{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}}`
 
 ### 1.3.1 Reto 
 
