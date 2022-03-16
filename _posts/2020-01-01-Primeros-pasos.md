@@ -4,6 +4,7 @@ typora-root-url: ../../
 layout: post
 categories: parte1
 conToc: true
+permalink: primeros-pasos
 ---
 
 ## 1.0 ¿Qué aprenderemos?
