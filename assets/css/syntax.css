@@ -208,3 +208,13 @@
   color: #f8f8f2;
   background-color: #49483e;
 }
+
+.language-plaintext.highlighter-rouge{
+   overflow:unset;
+}
+
+.highlighter-rouge{
+   overflow:scroll;
+   background-color:#49483e;
+}
+
