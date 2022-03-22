@@ -149,7 +149,7 @@ Si el usuario no está logeado se redirige automáticamente a la página de logi
 
 ## 4.4 Gestión de imágenes
 
-En este apartado vamos a implementar la subida e imágenes para la página de portada.
+En este apartado vamos a implementar la subida de imágenes para la página de portada.
 
 ### 4.4.1 Entidad `Category`
 
@@ -182,6 +182,8 @@ public function categories(): Response
 }
 ```
 
+Y la plantilla:
+
 {% raw %}
 
 ```twig
@@ -205,12 +207,13 @@ public function categories(): Response
 
 Ya podemos visitar la ruta `/admin/categories`
 
-### 4.4.2 Formulario Category
+### 4.4.2 Formulario `Category`
 
 Creamos el formulario para Categorías tal y como hicimos en el Formulario de Contacto
 
 ![image-20220318113520367](/symfony-blog-teoria/assets/img/admin/image-20220318113520367.png)
 **Controlador**
+
 ```php
 /**
  * @Route("/admin/categories", name="app_categories")
@@ -333,7 +336,7 @@ Al igual que hicimos con el formulario de contacto, hemos de crear el formulario
 En este caso hay dos peculiaridades:
 
 * La imagen tiene una clave ajena con la entidad `Category`
-* Queremos almacenar una imagen en la base de datos.
+* Queremos subir una imagen y almacenar la ruta a la misma en la base de datos 
 
 En primer lugar creamos el formulario:
 
