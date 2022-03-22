@@ -14,6 +14,10 @@ title: Zona de administración
 * A dar permisos de administrador a un usuario
 * A bloquear el acceso a determinadas páginas de nuestra web
 * A usar la función `asset` de twig para hacer nuestros assets accesibles independientemente de la url de nuestra aplicación.
+* A usar métodos del repositorio
+* A crear relaciones entre entidades
+* A subir imágenes al servidor
+* A copiar imágenes
 
 ## 4.1 Usuario administrador
 
@@ -201,7 +205,7 @@ public function categories(): Response
 
 Ya podemos visitar la ruta `/admin/categories`
 
-### 4.4.2 Formulario Category` 
+### 4.4.2 Formulario Category
 
 Creamos el formulario para Categorías tal y como hicimos en el Formulario de Contacto
 
@@ -234,15 +238,15 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
 
 ```twig
 
-   <div id="categories">
-   	  <div class="container">
-   	    <div class="col-xs-12 col-sm-8 col-sm-push-2">
-       	   <h1>Categories</h1>
-       	   {{ form(form, {'attr': {'class':'form-horizontal'}}) }}
-       	   <hr class='divider'>
-       	</div>   
-   	  </div>
-   </div>
+<div id="categories">
+    <div class="container">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+            <h1>Categories</h1>
+            {{ form(form, {'attr': {'class':'form-horizontal'}}) }}
+            <hr class='divider'>
+        </div>   
+	</div>
+</div>
 ```
 
 {{% endraw %}}
@@ -313,17 +317,364 @@ Y modificamos la plantilla para recorrer las categorías:
 
 ### 4.4.3 Entidad `Image`
 
-Como antes vamos a crear la entidad `Image` que tiene una clave ajena a `Category`. Por ello, cuando definamos la entidad hemos de indicar que el campo `Category` es una `Relation` de tipo `ManytoOne`
+Como antes, vamos a crear la entidad `Image` que tiene una clave ajena a `Category`. Por ello, cuando definamos la entidad hemos de indicar que el campo `Category` es una `Relation` de tipo `ManyToOne`
 
 <script id="asciicast-F3uLObe7zHp6tq9WvvUR89n1m" src="https://asciinema.org/a/F3uLObe7zHp6tq9WvvUR89n1m.js" async></script>
 
+Y realizamos la migración:
+
+```
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+```
+
 Al igual que hicimos con el formulario de contacto, hemos de crear el formulario y la plantilla:
 
+En este caso hay dos peculiaridades:
 
+* La imagen tiene una clave ajena con la entidad `Category`
+* Queremos almacenar una imagen en la base de datos.
 
+En primer lugar creamos el formulario:
 
+```
+php bin/console make:form CategoryForm Category
+```
 
- 
+En este formulario hacemos que el campo `category` obtenga los datos de la entidad `Category`
+
+```php
+...
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+...
+public function buildForm(FormBuilderInterface $builder, array $options): void
+{
+    $builder
+        ->add('File')
+        ->add('NumLikes')
+        ->add('NumViews')
+        ->add('NumDownloads')
+        ->add('Category', EntityType::class, array(
+            'class' => Category::class,
+            'choice_label' => 'name'))
+    ;
+}
+```
+
+Y la plantilla:
+
+{% raw %}
+
+```twig
+<div id="images">
+    <div class="container">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+            <h1>Images</h1>
+            {{ form(form, {'attr': {'class':'form-horizontal'}}) }}
+            <hr class="divider">
+        </div>   
+    </div>
+</div>
+```
+
+{% endraw %}
+
+Vamos a probar que funciona: 
+
+![image-20220322174001982](/symfony-blog-teoria/assets/img/admin/image-20220322174001982.png)
+
+Ahora vamos añadir clases a los campos para que tenga el mismo aspecto visual que el resto de la aplicación, pero esta vez lo haremos en el propio formulario:
+
+```php
+public function buildForm(FormBuilderInterface $builder, array $options): void
+{
+    $builder
+        ->add('File')
+        ->add('NumLikes', null, ['attr' => ['class'=>'form-control']])
+        ->add('NumViews', null, ['attr' => ['class'=>'form-control']])
+        ->add('NumDownloads', null, ['attr' => ['class'=>'form-control']])
+        ->add('category', EntityType::class, array(
+            'class' => Category::class,
+            'choice_label' => 'name'))
+        ->add('Send', SubmitType::class, ['attr' => ['class'=>'pull-right btn btn-lg sr-button']]);
+    ;
+}
+```
+
+### 4.4.4 Subir imágenes al servidor
+
+El truco para que el campo `file` sea de tipo `input file` es decirle a Symfony que no esté mapeado de tal forma que no lo guarde automáticamente:
+
+```php
+...
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
+...
+$builder
+    ->add('File', FileType::class,[
+        'mapped' => false,
+        'constraints' => [
+            new File([
+                'mimeTypes' => [
+                    'image/jpeg',
+                    'image/png',
+                ],
+                'mimeTypesMessage' => 'Please upload a valid image file',
+            ])
+        ],
+    ])
+```
+
+Ahora ya sólo nos queda modificar el controlador:
+
+```php
+...
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
+...
+
+...
+if ($form->isSubmitted() && $form->isValid()) {
+    $file = $form->get('File')->getData();
+    if ($file) {
+        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        // this is needed to safely include the file name as part of the URL
+        $safeFilename = $slugger->slug($originalFilename);
+        $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+
+        // Move the file to the directory where imates are stored
+        try {
+
+            $file->move(
+                $this->getParameter('images_directory'), $newFilename
+            );
+            $filesystem = new Filesystem();
+            $filesystem->copy(
+                $this->getParameter('images_directory') . '/'. $newFilename, 
+                $this->getParameter('portfolio_directory') . '/'.  $newFilename, true);
+
+        } catch (FileException $e) {
+            // ... handle exception if something happens during file upload
+        }
+
+        // updates the 'file$filename' property to store the PDF file name
+        // instead of its contents
+        $image->setFile($newFilename);
+    }
+    $image = $form->getData();   
+    
+...
+```
+
+Y definir la ruta a las imágenes en `config/services.yml`
+
+```yaml
+parameters:
+    images_directory: '%kernel.project_dir%/public/images/index/gallery'
+    portfolio_directory: '%kernel.project_dir%/public/images/index/portfolio'
+```
+
+### 4.4.5 RETO
+
+Crea la lista con las imágenes:
+
+Para obtener el nombre de la imagen usa:
+
+{% raw %}
+
+```twig
+<img style='width:150px;' src='{{ asset('images/index/gallery/' ~ image.file) }}'>
+```
+
+{% endraw %}
+
+![image-20220322195732035](/symfony-blog-teoria/assets/img/admin/image-20220322195732035.png)
+
+## 4.5 Página de portada.
+
+Ahora ya podemos modificar la página de portada para mostrar las imágenes que se van subiendo.
+
+Antes de nada, carga este archivo [sql](assets/images.sql) que contiene las instrucciones para insertar las imágenes ya existentes. 
+
+Ahora modificamos el controlador para obtener todas las categorías:
+
+```php
+/**
+ * @Route("/", name="index")
+ */
+public function index(ManagerRegistry $doctrine, Request $request): Response
+{
+    $repository = $doctrine->getRepository(Category::class);
+
+    $categories = $repository->findAll();
+
+    return $this->render('page/index.html.twig', ['categories' => $categories]);
+}
+```
+
+Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pinta las pestañas de las categorías y sustituirlo por la siguiente plantilla twig.
+
+{% raw %}
+
+```twig
+<div class="table-responsive">
+  <table class="table text-center">
+    <thead>
+      <tr>
+      {% for category in categories %}
+        <td><a class="link {{loop.first ? 'active' : ''}}" href="#category{{category.id}}" data-toggle="tab">{{category.name}}</a></td>
+      {% endfor %}
+      </tr>
+    </thead>
+  </table>
+  <hr>
+</div>
+```
+
+{% endraw }
+
+En esta plantilla usamos `loop.first` para poner la clase `active`  a la primera categoría.
+
+![image-20220322185956882](/symfony-blog-teoria/assets/img/admin/image-20220322185956882.png)
+
+{% raw %}
+
+Eliminamos el siguiente HTML porque de momento no vamos a paginar las imágenes:
+
+```html
+<nav class="text-center">
+    <ul class="pagination">
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#" aria-label="suivant">
+        <span aria-hidden="true">&raquo;</span>
+        </a></li>
+    </ul>
+</nav>
+```
+
+{% endraw %}
+
+Y ahora vamos a recorrer todas las imágenes.
+
+Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
+
+```html
+<div class="tab-content">
+
+<!-- First Category pictures -->
+    <div id="category1" class="tab-pane active" >
+      <div class="row popup-gallery">
+        <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="sol">
+          <img class="img-responsive" src="images/index/portfolio/1.jpg" alt="First category picture">
+          <div class="behind">
+              <div class="head text-center">
+                <ul class="list-inline">
+                  <li>
+                    <a class="gallery" href="images/index/gallery/1.jpg" data-toggle="tooltip" data-original-title="Quick View">
+                      <i class="fa fa-eye"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
+                      <i class="fa fa-heart"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-toggle="tooltip" data-original-title="Download">
+                      <i class="fa fa-download"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-toggle="tooltip" data-original-title="More information">
+                      <i class="fa fa-info"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="row box-content">
+                <ul class="list-inline text-center">
+                  <li><i class="fa fa-eye"></i> 1000</li>
+                  <li><i class="fa fa-heart"></i> 500</li>
+                  <li><i class="fa fa-download"></i> 100</li>
+                </ul>
+              </div>
+          </div>
+        </div>
+        </div> 
+
+      </div>
+    </div>
+<!-- End of First category pictures -->
+
+</div>
+```
+
+Y ahora creamos un partial para la imagen:
+
+```twig
+<div class="col-xs-12 col-sm-6 col-md-3">
+<div class="sol">
+  <img class="img-responsive" src="{{ asset('images/index/portfolio/' ~ image.file) }}" alt="First category picture">
+  <div class="behind">
+      <div class="head text-center">
+        <ul class="list-inline">
+          <li>
+            <a class="gallery" href="{{ asset('images/index/gallery/' ~ image.file) }}" data-toggle="tooltip" data-original-title="Quick View">
+              <i class="fa fa-eye"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
+              <i class="fa fa-heart"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" data-toggle="tooltip" data-original-title="Download">
+              <i class="fa fa-download"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" data-toggle="tooltip" data-original-title="More information">
+              <i class="fa fa-info"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="row box-content">
+        <ul class="list-inline text-center">
+          <li><i class="fa fa-eye"></i> {{ image.numViews }}</li>
+          <li><i class="fa fa-heart"></i> {{ image.numLikes }}</li>
+          <li><i class="fa fa-download"></i> {{ image.numDownloads }}</li>
+        </ul>
+      </div>
+  </div>
+</div>
+</div> 
+```
+
+Y modificamos `index.html.twig` 
+
+{% raw %}
+
+```twig
+<div class="tab-content">
+  {% for category in categories %}
+    <div id="category{{category.id}}" class="tab-pane {{loop.first ? 'active' : ''}}" >
+      <div class="row popup-gallery">
+      {% for image in category.images %}
+      {{ include ('partials/image.html.twig')}}
+      {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+```
+
+{% endraw %}
 
 
 
