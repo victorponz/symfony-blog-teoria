@@ -239,18 +239,9 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
 
 {{% raw %}}
 
-```twig
+![image-20220322203344623](/symfony-blog-teoria/assets/img/admin/image-20220322203344623.png)
 
-<div id="categories">
-    <div class="container">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2">
-            <h1>Categories</h1>
-            {{ form(form, {'attr': {'class':'form-horizontal'}}) }}
-            <hr class='divider'>
-        </div>   
-	</div>
-</div>
-```
+
 
 {{% endraw %}}
 
