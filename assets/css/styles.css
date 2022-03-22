@@ -188,9 +188,6 @@ body {
 #content p, #content li{
   text-align: justify;
 }
-#content p{
-	text-indent: 2em;
-}
 #content li p, #content blockquote p {
   text-indent: revert;
 }
