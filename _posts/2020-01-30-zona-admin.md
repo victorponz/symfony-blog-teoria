@@ -610,6 +610,8 @@ Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
 
 Y ahora creamos un partial para la imagen:
 
+{% raw %}
+
 ```twig
 <div class="col-xs-12 col-sm-6 col-md-3">
 <div class="sol">
@@ -650,6 +652,8 @@ Y ahora creamos un partial para la imagen:
 </div>
 </div> 
 ```
+
+{% endraw %}
 
 Y modificamos `index.html.twig` 
 
