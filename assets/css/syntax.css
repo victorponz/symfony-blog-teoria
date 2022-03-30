@@ -134,14 +134,3 @@ color:#9ac39f;
 .highlight .nb,.preview-zenburn .highlight .nc,.preview-zenburn .highlight .nf,.preview-zenburn .highlight .bp,.preview-zenburn .highlight .vc {
 color:#efef8f;
 }
-
-
-.language-plaintext.highlighter-rouge{
-   overflow:unset;
-}
-
-.highlighter-rouge{
-   overflow:scroll;
-   background-color:#3f3f3f;
-}
-
