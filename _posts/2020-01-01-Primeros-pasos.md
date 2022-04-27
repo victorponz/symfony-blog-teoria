@@ -217,10 +217,18 @@ Por ejemplo, en el caso del enlace a `index` quedará así:
 
 {% endraw %} 
 
-Estamos usando el **operador ternario** `{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}}`
+Estamos usando el **operador ternario** 
+
+{% raw %}
+
+```twig
+{{ (app.request.attributes.get('_route') == 'index')  ? 'active': ''}}
+```
+
+{% endraw %}
 
 ### 1.3.1 Reto 
 
-   Modifica la navegación para cada una de las rutas. Ten en cuenta que el menú `blog` se debe activar para las rutas `blog` y `single_post`
-
-   > **Nota** En twig se puede utilizar el operador `or`
+>-reto-Modifica la navegación para cada una de las rutas. Ten en cuenta que el menú `blog` se debe activar para las rutas `blog` y `single_post`
+>
+>> **Nota** En twig se puede utilizar el operador `or`
