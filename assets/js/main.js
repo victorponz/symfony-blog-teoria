@@ -68,11 +68,13 @@ function activeCurrentTocItem(){
             unactive();
             lastHeadingActive = decodeURIComponent(el.getAttribute('id'));
             lastActive = menuFixed.querySelector("[href='#" + lastHeadingActive + "']");
-            addClass(lastActive, 'active');
-            if (!isAnyPartOfElementInViewport(lastActive)){
-                lastActive.scrollIntoView();
+            if (lastActive){
+		    addClass(lastActive, 'active');
+		    if (!isAnyPartOfElementInViewport(lastActive)){
+		        lastActive.scrollIntoView();
+		    }
             }
-        }
+	}
     });
 }
 var menu = document.getElementById("menu");
@@ -81,13 +83,16 @@ var topFixed = document.getElementById("topFixed");
 var indexFixed = document.getElementById("indexFixed");
 var menuContainer =  document.getElementById("menuContainer");
 var allHeaders =  document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-var allMenuTopics = menuFixed.querySelectorAll('a');
+if (menuFixed)
+	var allMenuTopics = menuFixed.querySelectorAll('a');
 let lastScrollTop = 0;
 let lastActive;
 let lastHeadingActive;
 var backToTop = document.getElementById("back-to-top-link");
 
 window.addEventListener('scroll', function(e) {
+    if (!menuFixed)
+    	return;
     //Mostrar/ocultar el menú
     if (!isAnyPartOfElementInViewport(menu)){
         addClass(menuFixed, "show");
@@ -119,25 +124,27 @@ window.addEventListener('scroll', function(e) {
         if (previousHeader){
             unactive();
             var tocItem = menuFixed.querySelector("[href='#" + previousHeader.getAttribute("id") + "']");
-            addClass(tocItem, 'active');
-            if (!isAnyPartOfElementInViewport(tocItem)){
-                tocItem.scrollIntoView();
-            }
+            if (tocItem){
+		    addClass(tocItem, 'active');
+		    if (!isAnyPartOfElementInViewport(tocItem)){
+		        tocItem.scrollIntoView();
+		    }
+	   }
         }
     }
     lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
    
 });
-
-menuFixed.querySelectorAll('li a').forEach(el => {
-    el.addEventListener("click", e => {
-        e.preventDefault();
-        let hash = decodeURIComponent(e.currentTarget.href.split("#")[1]);
-        let destination = document.getElementById(hash);
-        destination.scrollIntoView({ behavior: 'smooth' })
-        window.setTimeout(() =>location.hash = hash, 500);
-    });
-});
+if (menuFixed)
+	menuFixed.querySelectorAll('li a').forEach(el => {
+	    el.addEventListener("click", e => {
+		e.preventDefault();
+		let hash = decodeURIComponent(e.currentTarget.href.split("#")[1]);
+		let destination = document.getElementById(hash);
+		destination.scrollIntoView({ behavior: 'smooth' })
+		window.setTimeout(() =>location.hash = hash, 500);
+	    });
+	});
 
 topFixed.querySelector('.toogle').addEventListener("click", e => {
     e.preventDefault();
@@ -210,3 +217,51 @@ document.querySelectorAll('div.highlighter-rouge').forEach(el => {
         addClass(newNode, 'hidden');
     });
 });
+
+
+document.querySelectorAll('blockquote p.task').forEach(el => {
+   	addClass(el.parentElement, "task");
+});
+
+document.querySelectorAll('blockquote p.reto').forEach(el => {
+   	addClass(el.parentElement, "reto");
+});
+
+document.querySelectorAll('blockquote p.hint').forEach(el => {
+   	addClass(el.parentElement, "hint");
+});
+
+document.querySelectorAll('blockquote p.info').forEach(el => {
+   	addClass(el.parentElement, "info");
+});
+
+document.querySelectorAll('blockquote p.warning').forEach(el => {
+   	addClass(el.parentElement, "warning");
+});
+
+document.querySelectorAll('blockquote p.alert').forEach(el => {
+   	addClass(el.parentElement, "alert");
+});
+
+document.querySelectorAll('blockquote p.toogle').forEach(el => {
+   	
+   	var firstParagraf = el.parentNode.querySelector("p");
+   	//<summary>Click to toggle contents of `code`</summary>
+	var that = el.parentElement;
+
+	var p = document.createElement('details');
+	addClass(p, "toogle");
+
+	// move all elements in the other container.
+	while(that.firstChild) {
+		p.appendChild(that.firstChild);
+	}
+	that.parentNode.replaceChild(p,that);
+	
+	const newNode = document.createElement("summary");
+	newNode.innerHTML = firstParagraf.innerText;
+	el.parentElement.insertBefore(newNode, el.parentElement.firstChild);
+	el.parentElement.removeChild(firstParagraf);
+});
+
+
