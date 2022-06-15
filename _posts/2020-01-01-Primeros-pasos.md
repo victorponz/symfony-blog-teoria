@@ -1,6 +1,7 @@
 ---
 typora-copy-images-to: ../../assets/img/primeros-pasos/
 typora-root-url: ../../
+title: Primeros pasos
 layout: post
 categories: parte1
 conToc: true
@@ -84,6 +85,8 @@ Ya podemos probar la página de portada:
 
 ![](/symfony-blog-teoria/assets/img/primeros-pasos/image-20220316084436890.png)
 
+#### 1.2.1.1 Plantilla base
+
 Todas las páginas comparten la cabecera y el pie de página, así que vamos a crear la plantilla `base.html.twig`.
 
 1. Copia el contenido de `index.html.twig` dentro de `base.html.twig`
@@ -160,9 +163,9 @@ Comprueba que funciona la ruta `/about`
 
 ### 1.2.3 Reto - Rutas `/contact`, `blog` y `single_post`
 
-Crea las ruta `/contact` en `PageController`, y las rutas  `/blog` y `single_post` en `BlogController`
-
-Ten en cuenta que en `blog.html` existen rutas a `single_post.html` que deberás cambiar para llamar a la ruta `single_post`
+> -reto- Crea las rutas `/contact` en `PageController`, y las rutas  `/blog` y `single_post` en `BlogController`
+>
+> Ten en cuenta que en `blog.html` existen enlaces a `single_post.html` que deberás cambiar para llamar a la ruta `single_post`
 
 ## 1.3 Menú de navegación
 
