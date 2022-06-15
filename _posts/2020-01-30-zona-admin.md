@@ -7,6 +7,7 @@ categories: parte4
 conToc: true
 permalink: zona-admin
 title: Zona de administración
+render_with_liquid: false
 ---
 
 ## 4 Qué aprenderemos
