@@ -63,8 +63,6 @@ class AdminController extends AbstractController
 
 La plantilla la renombramos a `images.html.twig` y modificamos:
 
-{% raw %}
-
 ```twig
 {% extends 'base.html.twig' %}
 {% block title%}Images{% endblock %}
@@ -82,8 +80,6 @@ La plantilla la renombramos a `images.html.twig` y modificamos:
 {% endblock %}
 ```
 
-{% endraw %}
-
  y comprobamos que ha perdido los estilos:
 
 ![image-20220318092357644](/symfony-blog-teoria/assets/img/admin/image-20220318092357644.png)
@@ -96,13 +92,9 @@ Esto ocurre porque la plantilla `base.html.twig` tiene las rutas a los assets de
 
 Y cuando estamos en una ruta interna como `/admin/images/` evidentemente no encuentra los estilos porque los busca en `/admin/images/bootstrap/css/bootstrap.min.css`. Solucionarlo es tan sencillo como hacer las rutas absolutas o, mejor aún, utilizar la función `asset` de twig:
 
-{% raw %}
-
 ```twig
 {{ asset('bootstrap/css/bootstrap.min.css') }}
 ```
-
-{% endraw %}
 
 ¿Por qué usamos `asset` en lugar de poner una ruta absoluta? Porque tal vez en producción sirvamos la aplicación en la ruta `blog` y entonces ya no nos funcionaría esta estrategia. Sin embargo, al usar `asset`, en producción se transformaría en `/blog/bootstrap/css/bootstrap.min.css`
 
@@ -156,7 +148,7 @@ En este apartado vamos a implementar la subida de imágenes para la página de p
 
 Las imágenes pertenecen a una categoría (en la página de portada existen tres pestañas de categorías). Así que el primer paso será crear la entidad `Category`
 
-<script id="asciicast-gHZCcLy8ie8gqxORzqutXKJ3s" src="https://asciinema.org/a/gHZCcLy8ie8gqxORzqutXKJ3s.js" async></script>
+<script id="asciicast-2T3YG2vSCrrSDbGH5F1sItQgR" src="https://asciinema.org/a/2T3YG2vSCrrSDbGH5F1sItQgR.js" async></script>
 
 Y realizamos la migración:
 
@@ -185,8 +177,6 @@ public function categories(): Response
 
 Y la plantilla:
 
-{% raw %}
-
 ```twig
 {% extends 'base.html.twig' %}
 {% block title%}Categories{% endblock %}
@@ -203,8 +193,6 @@ Y la plantilla:
 <!-- Principal Content Start -->
 {% endblock %}
 ```
-
-{% endraw %}
 
 Ya podemos visitar la ruta `/admin/categories`
 
@@ -238,13 +226,7 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
 ```
 **Plantilla**
 
-{{% raw %}}
-
 ![image-20220322203344623](/symfony-blog-teoria/assets/img/admin/image-20220322203344623.png)
-
-
-
-{{% endraw %}}
 
 También vamos a mostrar una lista con todas las categorías:
 
@@ -258,7 +240,6 @@ Modificamos el controlador para recuperar todas las categorías de la base de da
  */
 public function categories(ManagerRegistry $doctrine, Request $request): Response
 {
-    //Filtramos aquellos que contengan dicho texto en el nombre
     $repositorio = $doctrine->getRepository(Category::class);
 
     $categories = $repositorio->findAll();
@@ -281,8 +262,6 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
 ```
 
 Y modificamos la plantilla para recorrer las categorías:
-
-{% raw %}
 
 ```twig
 <hr class="divider">
@@ -308,13 +287,11 @@ Y modificamos la plantilla para recorrer las categorías:
 </div>
 ```
 
-{% endraw %}
-
 ### 4.4.3 Entidad `Image`
 
 Como antes, vamos a crear la entidad `Image` que tiene una clave ajena a `Category`. Por ello, cuando definamos la entidad hemos de indicar que el campo `Category` es una `Relation` de tipo `ManyToOne`
 
-<script id="asciicast-F3uLObe7zHp6tq9WvvUR89n1m" src="https://asciinema.org/a/F3uLObe7zHp6tq9WvvUR89n1m.js" async></script>
+<script id="asciicast-DCh9Ui5o5MdQpaZ20WQO2wyOj" src="https://asciinema.org/a/DCh9Ui5o5MdQpaZ20WQO2wyOj.js" async></script>
 
 Y realizamos la migración:
 
@@ -358,8 +335,6 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
 
 Y la plantilla:
 
-{% raw %}
-
 ```twig
 <div id="images">
     <div class="container">
@@ -372,13 +347,11 @@ Y la plantilla:
 </div>
 ```
 
-{% endraw %}
-
 Vamos a probar que funciona: 
 
 ![image-20220322174001982](/symfony-blog-teoria/assets/img/admin/image-20220322174001982.png)
 
-Ahora vamos añadir clases a los campos para que tenga el mismo aspecto visual que el resto de la aplicación, pero esta vez lo haremos en el propio formulario:
+Ahora vamos a añadir clases a los campos para que tenga el mismo aspecto visual que el resto de la aplicación, pero esta vez lo haremos en el propio formulario:
 
 ```php
 public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -439,7 +412,7 @@ if ($form->isSubmitted() && $form->isValid()) {
         $safeFilename = $slugger->slug($originalFilename);
         $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
-        // Move the file to the directory where imates are stored
+        // Move the file to the directory where images are stored
         try {
 
             $file->move(
@@ -475,15 +448,7 @@ parameters:
 
 Crea la lista con las imágenes:
 
-Para obtener el nombre de la imagen usa:
-
-{% raw %}
-
-```twig
-<img style='width:150px;' src='{{ asset('images/index/gallery/' ~ image.file) }}'>
-```
-
-{% endraw %}
+Para obtener el nombre de la imagen usa: `{{ asset('images/index/gallery/' ~ image.file) }}`
 
 ![image-20220322195732035](/symfony-blog-teoria/assets/img/admin/image-20220322195732035.png)
 
@@ -511,8 +476,6 @@ public function index(ManagerRegistry $doctrine, Request $request): Response
 
 Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pinta las pestañas de las categorías y sustituirlo por la siguiente plantilla twig.
 
-{% raw %}
-
 ```twig
 <div class="table-responsive">
   <table class="table text-center">
@@ -528,13 +491,9 @@ Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pint
 </div>
 ```
 
-{% endraw }
-
 En esta plantilla usamos `loop.first` para poner la clase `active`  a la primera categoría.
 
 ![image-20220322185956882](/symfony-blog-teoria/assets/img/admin/image-20220322185956882.png)
-
-{% raw %}
 
 Eliminamos el siguiente HTML porque de momento no vamos a paginar las imágenes:
 
@@ -550,9 +509,6 @@ Eliminamos el siguiente HTML porque de momento no vamos a paginar las imágenes:
     </ul>
 </nav>
 ```
-
-{% endraw %}
-
 Y ahora vamos a recorrer todas las imágenes.
 
 Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
@@ -611,8 +567,6 @@ Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
 
 Y ahora creamos un partial para la imagen:
 
-{% raw %}
-
 ```twig
 <div class="col-xs-12 col-sm-6 col-md-3">
 <div class="sol">
@@ -654,11 +608,7 @@ Y ahora creamos un partial para la imagen:
 </div> 
 ```
 
-{% endraw %}
-
 Y modificamos `index.html.twig` 
-
-{% raw %}
 
 ```twig
 <div class="tab-content">
@@ -672,8 +622,6 @@ Y modificamos `index.html.twig`
     </div>
 {% endfor %}
 ```
-
-{% endraw %}
 
 
 
