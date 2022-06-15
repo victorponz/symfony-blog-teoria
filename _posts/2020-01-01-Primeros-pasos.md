@@ -24,7 +24,7 @@ permalink: primeros-pasos
 composer create-project symfony/website-skeleton symfony-blog
 ```
 
-1. Descargar la plantilla de la web
+1. Descargar la [plantilla de la web](/symfony-blog-teoria/assets/photo-master.zip)
 2. Se descomprime en `public` 
 3. Comprueba que la web funciona
 
