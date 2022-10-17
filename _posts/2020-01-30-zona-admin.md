@@ -466,7 +466,13 @@ parameters:
 
 Crea la lista con las imágenes:
 
-Para obtener el nombre de la imagen usa: `{{ asset('images/index/gallery/' ~ image.file) }}`
+Para obtener el nombre de la imagen usa: 
+
+{% raw % }
+
+`{{ asset('images/index/gallery/' ~ image.file) }}`
+
+{% endraw %}
 
 ![image-20220322195732035](/symfony-blog-teoria/assets/img/admin/image-20220322195732035.png)
 
