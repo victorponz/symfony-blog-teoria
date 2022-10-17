@@ -63,6 +63,8 @@ class AdminController extends AbstractController
 
 La plantilla la renombramos a `images.html.twig` y modificamos:
 
+{% raw %}
+
 ```twig
 {% extends 'base.html.twig' %}
 {% block title%}Images{% endblock %}
@@ -80,7 +82,7 @@ La plantilla la renombramos a `images.html.twig` y modificamos:
 {% endblock %}
 ```
 
- y comprobamos que ha perdido los estilos:
+{% endraw %} y comprobamos que ha perdido los estilos:
 
 ![image-20220318092357644](/symfony-blog-teoria/assets/img/admin/image-20220318092357644.png)
 
@@ -92,9 +94,13 @@ Esto ocurre porque la plantilla `base.html.twig` tiene las rutas a los assets de
 
 Y cuando estamos en una ruta interna como `/admin/images/` evidentemente no encuentra los estilos porque los busca en `/admin/images/bootstrap/css/bootstrap.min.css`. Solucionarlo es tan sencillo como hacer las rutas absolutas o, mejor aún, utilizar la función `asset` de twig:
 
+{% raw %}
+
 ```twig
 {{ asset('bootstrap/css/bootstrap.min.css') }}
 ```
+
+{% endraw %}
 
 ¿Por qué usamos `asset` en lugar de poner una ruta absoluta? Porque tal vez en producción sirvamos la aplicación en la ruta `blog` y entonces ya no nos funcionaría esta estrategia. Sin embargo, al usar `asset`, en producción se transformaría en `/blog/bootstrap/css/bootstrap.min.css`
 
@@ -123,7 +129,7 @@ public function adminDashboard(): Response
 }
 ```
 
-Si el usuario no está logeado se redirige automáticamente a la página de login. Pero si sí lo está pero no tiene el rol `ADMIN` symfony muestra una página de error 
+Si el usuario no está logeado se redirige automáticamente a la página de login. Pero si sí lo está pero no tiene el rol `ADMIN` Symfony muestra una página de error 
 
 ![image-20220318095713134](/symfony-blog-teoria/assets/img/admin/image-20220318095713134.png)
 
@@ -177,6 +183,8 @@ public function categories(): Response
 
 Y la plantilla:
 
+{% raw %}
+
 ```twig
 {% extends 'base.html.twig' %}
 {% block title%}Categories{% endblock %}
@@ -193,6 +201,8 @@ Y la plantilla:
 <!-- Principal Content Start -->
 {% endblock %}
 ```
+
+{% endraw %}
 
 Ya podemos visitar la ruta `/admin/categories`
 
@@ -263,6 +273,8 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
 
 Y modificamos la plantilla para recorrer las categorías:
 
+{% raw %}
+
 ```twig
 <hr class="divider">
 <div>
@@ -286,6 +298,8 @@ Y modificamos la plantilla para recorrer las categorías:
 	</table>
 </div>
 ```
+
+{% endraw %}
 
 ### 4.4.3 Entidad `Image`
 
@@ -335,6 +349,8 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
 
 Y la plantilla:
 
+{% raw %}
+
 ```twig
 <div id="images">
     <div class="container">
@@ -346,6 +362,8 @@ Y la plantilla:
     </div>
 </div>
 ```
+
+{% endraw %}
 
 Vamos a probar que funciona: 
 
@@ -476,6 +494,8 @@ public function index(ManagerRegistry $doctrine, Request $request): Response
 
 Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pinta las pestañas de las categorías y sustituirlo por la siguiente plantilla twig.
 
+{% raw %}
+
 ```twig
 <div class="table-responsive">
   <table class="table text-center">
@@ -490,6 +510,8 @@ Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pint
   <hr>
 </div>
 ```
+
+{% endraw %}
 
 En esta plantilla usamos `loop.first` para poner la clase `active`  a la primera categoría.
 
@@ -567,6 +589,8 @@ Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
 
 Y ahora creamos un partial para la imagen:
 
+{% raw %}
+
 ```twig
 <div class="col-xs-12 col-sm-6 col-md-3">
 <div class="sol">
@@ -608,7 +632,11 @@ Y ahora creamos un partial para la imagen:
 </div> 
 ```
 
+{% endraw %}
+
 Y modificamos `index.html.twig` 
+
+{% raw %}
 
 ```twig
 <div class="tab-content">
@@ -623,7 +651,7 @@ Y modificamos `index.html.twig`
 {% endfor %}
 ```
 
-
+{% endraw %}
 
 **Más información en**
 
