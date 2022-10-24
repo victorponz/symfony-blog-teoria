@@ -63,7 +63,7 @@ class AdminController extends AbstractController
 
 La plantilla la renombramos a `images.html.twig` y modificamos:
 
-{% raw %}
+{% raw2%}
 
 ```twig
 {% extends 'base.html.twig' %}
@@ -82,7 +82,7 @@ La plantilla la renombramos a `images.html.twig` y modificamos:
 {% endblock %}
 ```
 
-{% endraw %} y comprobamos que ha perdido los estilos:
+{% endraw2%} y comprobamos que ha perdido los estilos:
 
 ![image-20220318092357644](/symfony-blog-teoria/assets/img/admin/image-20220318092357644.png)
 
@@ -94,13 +94,13 @@ Esto ocurre porque la plantilla `base.html.twig` tiene las rutas a los assets de
 
 Y cuando estamos en una ruta interna como `/admin/images/` evidentemente no encuentra los estilos porque los busca en `/admin/images/bootstrap/css/bootstrap.min.css`. Solucionarlo es tan sencillo como hacer las rutas absolutas o, mejor aún, utilizar la función `asset` de twig:
 
-{% raw %}
+{% raw2%}
 
 ```twig
 {{ asset('bootstrap/css/bootstrap.min.css') }}
 ```
 
-{% endraw %}
+{% endraw2%}
 
 ¿Por qué usamos `asset` en lugar de poner una ruta absoluta? Porque tal vez en producción sirvamos la aplicación en la ruta `blog` y entonces ya no nos funcionaría esta estrategia. Sin embargo, al usar `asset`, en producción se transformaría en `/blog/bootstrap/css/bootstrap.min.css`
 
@@ -183,7 +183,7 @@ public function categories(): Response
 
 Y la plantilla:
 
-{% raw %}
+{% raw2%}
 
 ```twig
 {% extends 'base.html.twig' %}
@@ -202,7 +202,7 @@ Y la plantilla:
 {% endblock %}
 ```
 
-{% endraw %}
+{% endraw2%}
 
 Ya podemos visitar la ruta `/admin/categories`
 
@@ -273,7 +273,7 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
 
 Y modificamos la plantilla para recorrer las categorías:
 
-{% raw %}
+{% raw2%}
 
 ```twig
 <hr class="divider">
@@ -299,7 +299,7 @@ Y modificamos la plantilla para recorrer las categorías:
 </div>
 ```
 
-{% endraw %}
+{% endraw2%}
 
 ### 4.4.3 Entidad `Image`
 
@@ -349,7 +349,7 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
 
 Y la plantilla:
 
-{% raw %}
+{% raw2%}
 
 ```twig
 <div id="images">
@@ -363,7 +363,7 @@ Y la plantilla:
 </div>
 ```
 
-{% endraw %}
+{% endraw2%}
 
 Vamos a probar que funciona: 
 
@@ -412,7 +412,7 @@ $builder
 ```
 
 Ahora ya sólo nos queda modificar el controlador:
-{% raw %}
+{% raw2%}
 ```php
 ...
 use Symfony\Component\Filesystem\Filesystem;
@@ -453,27 +453,27 @@ if ($form->isSubmitted() && $form->isValid()) {
     
 ...
 ```
-{% endraw %}
+{% endraw2%}
 Y definir la ruta a las imágenes en `config/services.yml`
 
-{% raw % }
+{% raw2% }
 ```yaml
 parameters:
     images_directory: '%kernel.project_dir%/public/images/index/gallery'
     portfolio_directory: '%kernel.project_dir%/public/images/index/portfolio'
 ```
-{% endraw % }
+{% endraw2% }
 ### 4.4.5 RETO
 
 Crea la lista con las imágenes:
 
 Para obtener el nombre de la imagen usa: 
 
-{% raw % }
+{% raw2% }
 
 `{{ asset('images/index/gallery/' ~ image.file) }}`
 
-{% endraw %}
+{% endraw2%}
 
 ![image-20220322195732035](/symfony-blog-teoria/assets/img/admin/image-20220322195732035.png)
 
@@ -501,7 +501,7 @@ public function index(ManagerRegistry $doctrine, Request $request): Response
 
 Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pinta las pestañas de las categorías y sustituirlo por la siguiente plantilla twig.
 
-{% raw %}
+{% raw2%}
 
 ```twig
 <div class="table-responsive">
@@ -518,7 +518,7 @@ Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pint
 </div>
 ```
 
-{% endraw %}
+{% endraw2%}
 
 En esta plantilla usamos `loop.first` para poner la clase `active`  a la primera categoría.
 
@@ -596,7 +596,7 @@ Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
 
 Y ahora creamos un partial para la imagen:
 
-{% raw %}
+{% raw2%}
 
 ```twig
 <div class="col-xs-12 col-sm-6 col-md-3">
@@ -639,11 +639,11 @@ Y ahora creamos un partial para la imagen:
 </div> 
 ```
 
-{% endraw %}
+{% endraw2%}
 
 Y modificamos `index.html.twig` 
 
-{% raw %}
+{% raw2%}
 
 ```twig
 <div class="tab-content">
@@ -658,7 +658,7 @@ Y modificamos `index.html.twig`
 {% endfor %}
 ```
 
-{% endraw %}
+{% endraw2%}
 
 **Más información en**
 
