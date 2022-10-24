@@ -456,12 +456,13 @@ if ($form->isSubmitted() && $form->isValid()) {
 
 Y definir la ruta a las imágenes en `config/services.yml`
 
+{% raw % }
 ```yaml
 parameters:
     images_directory: '%kernel.project_dir%/public/images/index/gallery'
     portfolio_directory: '%kernel.project_dir%/public/images/index/portfolio'
 ```
-
+{% endraw % }
 ### 4.4.5 RETO
 
 Crea la lista con las imágenes:
