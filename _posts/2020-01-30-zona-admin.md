@@ -63,7 +63,7 @@ class AdminController extends AbstractController
 
 La plantilla la renombramos a `images.html.twig` y modificamos:
 
-
+{% raw %}
 ```twig
 {% extends 'base.html.twig' %}
 {% block title%}Images{% endblock %}
@@ -80,7 +80,7 @@ La plantilla la renombramos a `images.html.twig` y modificamos:
 <!-- Principal Content Start -->
 {% endblock %}
 ```
-
+{% endraw %}
 y comprobamos que ha perdido los estilos:
 
 ![image-20220318092357644](/symfony-blog-teoria/assets/img/admin/image-20220318092357644.png)
@@ -178,7 +178,7 @@ public function categories(): Response
 ```
 
 Y la plantilla:
-
+{% raw %}
 ```twig
 {% extends 'base.html.twig' %}
 {% block title%}Categories{% endblock %}
@@ -195,7 +195,7 @@ Y la plantilla:
 <!-- Principal Content Start -->
 {% endblock %}
 ```
-
+{% endraw %}
 Ya podemos visitar la ruta `/admin/categories`
 
 ### 4.4.2 Formulario `Category`
