@@ -412,7 +412,7 @@ $builder
 ```
 
 Ahora ya sólo nos queda modificar el controlador:
-
+{% raw %}
 ```php
 ...
 use Symfony\Component\Filesystem\Filesystem;
@@ -453,7 +453,7 @@ if ($form->isSubmitted() && $form->isValid()) {
     
 ...
 ```
-
+{% endraw %}
 Y definir la ruta a las imágenes en `config/services.yml`
 
 {% raw % }
