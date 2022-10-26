@@ -92,11 +92,12 @@ Esto ocurre porque la plantilla `base.html.twig` tiene las rutas a los assets de
 ```
 
 Y cuando estamos en una ruta interna como `/admin/images/` evidentemente no encuentra los estilos porque los busca en `/admin/images/bootstrap/css/bootstrap.min.css`. Solucionarlo es tan sencillo como hacer las rutas absolutas o, mejor aún, utilizar la función `asset` de twig:
+{% raw %}
 
 ```twig
 {{ asset('bootstrap/css/bootstrap.min.css') }}
 ```
-
+{% endraw %}
 
 ¿Por qué usamos `asset` en lugar de poner una ruta absoluta? Porque tal vez en producción sirvamos la aplicación en la ruta `blog` y entonces ya no nos funcionaría esta estrategia. Sin embargo, al usar `asset`, en producción se transformaría en `/blog/bootstrap/css/bootstrap.min.css`
 
