@@ -266,7 +266,7 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
 
 Y modificamos la plantilla para recorrer las categorías:
 
-
+{% raw %}
 ```twig
 <hr class="divider">
 <div>
@@ -290,7 +290,7 @@ Y modificamos la plantilla para recorrer las categorías:
 	</table>
 </div>
 ```
-
+{% endraw %}
 ### 4.4.3 Entidad `Image`
 
 Como antes, vamos a crear la entidad `Image` que tiene una clave ajena a `Category`. Por ello, cuando definamos la entidad hemos de indicar que el campo `Category` es una `Relation` de tipo `ManyToOne`
@@ -314,7 +314,7 @@ En este caso hay dos peculiaridades:
 En primer lugar creamos el formulario:
 
 ```
-php bin/console make:form CategoryForm Category
+php bin/console make:form ImageForm Image
 ```
 
 En este formulario hacemos que el campo `category` obtenga los datos de la entidad `Category`
@@ -340,7 +340,7 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
 Y la plantilla:
 
 
-
+{% raw %}
 ```twig
 <div id="images">
     <div class="container">
@@ -352,6 +352,7 @@ Y la plantilla:
     </div>
 </div>
 ```
+{% endraw %}
 
 Vamos a probar que funciona: 
 
@@ -488,7 +489,7 @@ public function index(ManagerRegistry $doctrine, Request $request): Response
 
 Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pinta las pestañas de las categorías y sustituirlo por la siguiente plantilla twig.
 
-
+{% raw %}
 ```twig
 <div class="table-responsive">
   <table class="table text-center">
@@ -503,6 +504,7 @@ Y modificar la plantilla `index.html.twig`. Debes eliminar todo el HTML que pint
   <hr>
 </div>
 ```
+{% endraw %}
 
 En esta plantilla usamos `loop.first` para poner la clase `active`  a la primera categoría.
 
@@ -580,7 +582,7 @@ Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
 
 Y ahora creamos un partial para la imagen:
 
-
+{% raw %}
 ```twig
 <div class="col-xs-12 col-sm-6 col-md-3">
 <div class="sol">
@@ -621,11 +623,11 @@ Y ahora creamos un partial para la imagen:
 </div>
 </div> 
 ```
-
+{% endraw %}
 
 Y modificamos `index.html.twig` 
 
-
+{% raw %}
 ```twig
 <div class="tab-content">
   {% for category in categories %}
@@ -638,7 +640,7 @@ Y modificamos `index.html.twig`
     </div>
 {% endfor %}
 ```
-
+{% endraw %}
 **Más información en**
 
 [https://symfony.com/doc/current/security.html](https://symfony.com/doc/current/security.html)
