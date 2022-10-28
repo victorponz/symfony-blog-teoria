@@ -356,6 +356,33 @@ Y la plantilla:
 ```
 {% endraw %}
 
+Creamos el controlador:
+```php
+/**
+ * @Route("/admin/images", name="app_images")
+ */
+public function images(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
+{
+    
+    $repository = $doctrine->getRepository(Image::class);
+
+ 
+    $form = $this->createForm(ImageFormType::class, $image);
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $image = $form->getData();    
+        $entityManager = $doctrine->getManager();    
+        $entityManager->persist($image);
+        $entityManager->flush();
+    }
+    return $this->render('admin/images.html.twig', array(
+        'form' => $form->createView(),
+        'images' => $images   
+    ));
+
+    
+}
+```
 Vamos a probar que funciona: 
 
 ![image-20220322174001982](/symfony-blog-teoria/assets/img/admin/image-20220322174001982.png)
@@ -460,9 +487,9 @@ Crea la lista con las imágenes:
 
 Para obtener el nombre de la imagen usa: 
 
-
+{% raw %}
 `{{ asset('images/index/gallery/' ~ image.file) }}`
-
+{% endraw %}
 
 
 ![image-20220322195732035](/symfony-blog-teoria/assets/img/admin/image-20220322195732035.png)
