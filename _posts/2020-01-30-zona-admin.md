@@ -366,7 +366,9 @@ public function images(ManagerRegistry $doctrine, Request $request, SluggerInter
     
     $repository = $doctrine->getRepository(Image::class);
 
- 
+    $images = $repository->findAll();
+
+    $image = new Image();
     $form = $this->createForm(ImageFormType::class, $image);
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()) {
