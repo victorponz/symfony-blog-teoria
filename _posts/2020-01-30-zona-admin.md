@@ -95,7 +95,7 @@ Y cuando estamos en una ruta interna como `/admin/images/` evidentemente no encu
 {% raw %}
 
 ```twig
-{{ asset('bootstrap/css/bootstrap.min.css') }}
+<link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
 ```
 {% endraw %}
 
