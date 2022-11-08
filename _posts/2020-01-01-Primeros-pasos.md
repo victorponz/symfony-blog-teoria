@@ -179,7 +179,7 @@ Vamos a crear una `partial` para la navegación.
    {{ include ('partials/navigation.html.twig')}}
    ```
 {% endraw %}
-3. Ya podemos modificar el partial para que apunte a las nuevas rutas. Hemos de usar la función de twig `path` que nos devuelve el path a una ruta con nombre. Nunca `harcodéis` las rutas que para eso se les asigna un nombre en el controlador. Ten en cuenta que la dirección de la ruta podría cambiar durante el desarrollo del proyecto pero el nombre no debería.
+3. Ya podemos modificar el partial para que apunte a las nuevas rutas. Hemos de usar la función de twig `path` que nos devuelve el path a una ruta con nombre. Nunca `harcodéis` las rutas que para eso se les asigna un nombre en el controlador. Ten en cuenta que la dirección de la ruta podría cambiar durante el desarrollo del proyecto pero el nombre no debería hacerlo.
 {% raw %}
    
    ```twig
