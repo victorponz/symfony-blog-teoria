@@ -30,7 +30,7 @@ composer create-project symfony/website-skeleton symfony-blog
 
 ## 1.2 Definir las rutas
 
-Vamos a crear las rutas para cada una de las páginas
+Vamos a crear las rutas para cada una de las páginas.
 
 El primer paso es crear un **Controlador**
 
@@ -55,24 +55,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PageController extends AbstractController
 {
-    /**`
-     * @Route("/page", name="app_page")
-     */
+    #[Route('/page', name: 'app_page')]
     public function index(): Response
     {
         return $this->render('page/index.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
-} 
+}
+
 ```
 
-Ahora movemos la página `public/index.html` a `templates/page/index.html.twig` y modificamos el controlador para que quede así:
+Ahora eliminamos la página que genera automáticamente en `templates/page/index.html.twig`, movemos la página `public/index.html` a `templates/page/index.html.twig` y modificamos el controlador para que quede así:
 
 ```php
-/**
-* @Route("/", name="index")
-*/
+#[Route('/', name: 'index')]
 public function index(): Response
 {
 	return $this->render('page/index.html.twig', []);
@@ -81,7 +78,7 @@ public function index(): Response
 
 Hemos creado la ruta `/` y la hemos nombrado como `index`
 
-Ya podemos probar la página de portada:
+Ya podemos probar la página de portada [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
 
 ![](/symfony-blog-teoria/assets/img/primeros-pasos/image-20220316084436890.png)
 
@@ -136,9 +133,7 @@ Todas las páginas comparten la cabecera y el pie de página, así que vamos a c
 Creamos el controlador 
 
 ```php
-/**
- * @Route("/about", name="about")
- */
+#[Route('/about', name: 'about')]
 public function about(): Response
 {
     return $this->render('page/about.html.twig', []);
@@ -161,9 +156,9 @@ Movemos la página `about.html ` a `/templates/page/about.html.twig`
 {% endraw %}
 Comprueba que funciona la ruta `/about`
 
-### 1.2.3 Reto - Rutas `/contact`, `blog` y `single_post`
+### 1.2.3 Reto - Rutas `/contact`, `/blog` y `/single_post`
 
-> -reto- Crea las rutas `/contact` en `PageController`, y las rutas  `/blog` y `single_post` en `BlogController`
+> -reto- Crea las rutas `/contact` en `PageController`, y las rutas  `/blog` y `/single_post` en `BlogController`
 >
 > Ten en cuenta que en `blog.html` existen enlaces a `single_post.html` que deberás cambiar para llamar a la ruta `single_post`
 
