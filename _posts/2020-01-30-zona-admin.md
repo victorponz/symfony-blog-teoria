@@ -30,11 +30,11 @@ En pypMyAdmin ejecuta el siguiente sql:
 UPDATE user SET roles = '["ROLE_ADMIN"]' WHERE id = 1;
 ```
 
-Ahora comprueba que, efectivamente, posees ese rol. Para ello, logéate con ese usuario y comprueba la barra del *profiler*  de Symfony:
+Ahora comprueba que, efectivamente, posees ese rol. Para ello, inicia sesión con ese usuario y comprueba la barra del *profiler*  de Symfony:
 
 ![image-20220318091014699](/symfony-blog-teoria/assets/img/admin/image-20220318091014699.png)
 
-## 4.2 Creación de la parte admin
+## 4.2 Creación de la parte `admin`
 
 Vamos a crear una ruta para poder añadir imágenes a la página de portada. 
 
@@ -51,7 +51,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
-    #[Route('//admin/images', name: 'app_images')]
+    #[Route('/admin/images', name: 'app_images')]
     public function images(): Response
     {
         return $this->render('admin/images.html.twig', []);
@@ -112,7 +112,7 @@ Bloquear el acceso a toda una zona de nuestra web es tan sencillo como modificar
         - { path: ^/admin, roles: ROLE_ADMIN }
 ```
 
-> -alert-Como todos los archivos `yaml` es muy sensible a errores. Sólo se pueden poner 4 espacios para indentar.
+> -alert-Como todos los archivos `yaml` es muy sensible a errores. Si Symfony empieza a dar errores extraños después de modificar un archivo de este tipo, revísalo
 
 Si lo que necesitamos es proteger el acceso a un controlador, usaríamos el siguiente código:
 
@@ -128,7 +128,7 @@ public function adminDashboard(): Response
 }
 ```
 
-Si el usuario no está logeado se redirige automáticamente a la página de login. Pero si sí lo está pero no tiene el rol `ADMIN` Symfony muestra una página de error 
+Si el usuario no ha iniciado sesión se redirige automáticamente a la página de login. Pero si sí lo está pero no tiene el rol `ADMIN` Symfony muestra una página de error 
 
 ![image-20220318095713134](/symfony-blog-teoria/assets/img/admin/image-20220318095713134.png)
 
@@ -169,17 +169,16 @@ php bin/console make:form CategoryForm Category
 En el controlador `AdminController` creamos la siguiente ruta
 
 ```php
-/**
- * @Route("/admin/categories", name="app_categories")
- */
+#[Route('/admin/categories', name: 'app_categories')]
 public function categories(): Response
 {
     return $this->render('admin/categories.html.twig', []);
 }
 ```
 
-Y la plantilla:
+Y la plantilla `admin/categories.html.twig`:
 {% raw %}
+
 ```twig
 {% extends 'base.html.twig' %}
 {% block title%}Categories{% endblock %}
@@ -201,15 +200,13 @@ Ya podemos visitar la ruta `/admin/categories`
 
 ### 4.4.2 Formulario `Category`
 
-Creamos el formulario para Categorías tal y como hicimos en el Formulario de Contacto
+Creamos el formulario para Categorías tal y como hicimos en el [Formulario de Contacto](https://victorponz.github.io/symfony-blog-teoria/formulario-de-contacto)
 
 ![image-20220318113520367](/symfony-blog-teoria/assets/img/admin/image-20220318113520367.png)
 **Controlador**
 
 ```php
-/**
- * @Route("/admin/categories", name="app_categories")
- */
+#[Route('/admin/categories', name: 'app_categories')]
 public function categories(ManagerRegistry $doctrine, Request $request): Response
 {
     $category = new Category();
@@ -238,9 +235,7 @@ También vamos a mostrar una lista con todas las categorías:
 Modificamos el controlador para recuperar todas las categorías de la base de datos:
 
 ```php
-/**
- * @Route("/admin/categories", name="app_categories")
- */
+#[Route('/admin/categories', name: 'app_categories')]
 public function categories(ManagerRegistry $doctrine, Request $request): Response
 {
     $repositorio = $doctrine->getRepository(Category::class);
@@ -356,16 +351,11 @@ Y la plantilla:
 
 Creamos el controlador:
 ```php
-/**
- * @Route("/admin/images", name="app_images")
- */
-public function images(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
+#[Route('/admin/images', name: 'app_images')]
+public function images(ManagerRegistry $doctrine, Request $request): Response
 {
-    
     $repository = $doctrine->getRepository(Image::class);
-
     $images = $repository->findAll();
-
     $image = new Image();
     $form = $this->createForm(ImageFormType::class, $image);
     $form->handleRequest($request);
@@ -379,8 +369,6 @@ public function images(ManagerRegistry $doctrine, Request $request, SluggerInter
         'form' => $form->createView(),
         'images' => $images   
     ));
-
-    
 }
 ```
 Vamos a probar que funciona: 
