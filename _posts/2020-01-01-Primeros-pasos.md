@@ -118,12 +118,13 @@ Todas las páginas comparten la cabecera y el pie de página, así que vamos a c
       ```
   cópialo y sustitúyelo por:
   {% raw %}
-     ```twig
-     {% block body %}{% endblock %}  
-     ```
+      ```twig
+      {% block body %}{% endblock %}  
+      ```
   {% endraw %}
-   Este es el código que va a variar entre página y página. Por tanto vamos a moverlo a la página `index.html.twig` dentro del bloque `body`
-{% raw %}
+      Este es el código que va a variar entre página y página.
+      El código cortado vamos a pegarlo en la página `index.html.twig` dentro del bloque `body`
+      {% raw %}
 
       ```twig
       {% block body %}
@@ -133,8 +134,8 @@ Todas las páginas comparten la cabecera y el pie de página, así que vamos a c
 {% endraw %}
    Ya solo nos queda modificar el título de la página `/`.
    {% raw %}
-      ```twig
-      {% block title %}Index{% endblock %}  
+   ```twig
+   {% block title %}Index{% endblock %}  
       ```
    {% endraw %}
 
