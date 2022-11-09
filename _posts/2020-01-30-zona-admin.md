@@ -51,9 +51,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
-    /**
-     * @Route("/admin/images", name="app_images")
-     */
+    #[Route('//admin/images', name: 'app_images')]
     public function images(): Response
     {
         return $this->render('admin/images.html.twig', []);
@@ -81,11 +79,11 @@ La plantilla la renombramos a `images.html.twig` y modificamos:
 {% endblock %}
 ```
 {% endraw %}
-y comprobamos que ha perdido los estilos:
+visitamos [http://127.0.0.1:8080/admin/images](http://127.0.0.1:8080/admin/images) y comprobamos que ha perdido los estilos:
 
 ![image-20220318092357644](/symfony-blog-teoria/assets/img/admin/image-20220318092357644.png)
 
-Esto ocurre porque la plantilla `base.html.twig` tiene las rutas a los assets de forma relativa:
+Esto ocurre porque la plantilla `base.html.twig` tiene las rutas a los assets (los assets son todos los archivos estáticos de la aplicación, como imágenes, hojas de estilos y scripts) de forma relativa:
 
 ```html
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
@@ -99,7 +97,7 @@ Y cuando estamos en una ruta interna como `/admin/images/` evidentemente no encu
 ```
 {% endraw %}
 
-¿Por qué usamos `asset` en lugar de poner una ruta absoluta? Porque tal vez en producción sirvamos la aplicación en la ruta `blog` y entonces ya no nos funcionaría esta estrategia. Sin embargo, al usar `asset`, en producción se transformaría en `/blog/bootstrap/css/bootstrap.min.css`
+> -info-¿Por qué usamos `asset` en lugar de poner una ruta absoluta? Porque tal vez en producción sirvamos la aplicación en la ruta `blog` y entonces ya no nos funcionaría esta estrategia. Sin embargo, al usar `asset`, en producción se transformaría en `/blog/bootstrap/css/bootstrap.min.css`
 
 Ahora cambia todas las rutas a los archivos css y javascript para incluir la función `asset`
 
@@ -113,6 +111,8 @@ Bloquear el acceso a toda una zona de nuestra web es tan sencillo como modificar
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
 ```
+
+> -alert-Como todos los archivos `yaml` es muy sensible a errores. Sólo se pueden poner 4 espacios para indentar.
 
 Si lo que necesitamos es proteger el acceso a un controlador, usaríamos el siguiente código:
 
@@ -142,8 +142,6 @@ Si el usuario no está logeado se redirige automáticamente a la página de logi
 > ```
 > APP_ENV=prod
 > ```
-
-
 
 ## 4.4 Gestión de imágenes
 
@@ -328,11 +326,11 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 public function buildForm(FormBuilderInterface $builder, array $options): void
 {
     $builder
-        ->add('File')
-        ->add('NumLikes')
-        ->add('NumViews')
-        ->add('NumDownloads')
-        ->add('Category', EntityType::class, array(
+        ->add('file')
+        ->add('numLikes')
+        ->add('numViews')
+        ->add('numDownloads')
+        ->add('ategory', EntityType::class, array(
             'class' => Category::class,
             'choice_label' => 'name'))
     ;
