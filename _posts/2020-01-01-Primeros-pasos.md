@@ -132,13 +132,12 @@ Todas las páginas comparten la cabecera y el pie de página, así que vamos a c
       {% endblock %}
       ```
 {% endraw %}
-   Ya solo nos queda modificar el título de la página `/`.
-   {% raw %}
-   ```twig
-   {% block title %}Index{% endblock %}  
+      Ya solo nos queda modificar el título de la página `/`.
+      {% raw %}
+      ```twig
+      {% block title %}Index{% endblock %}  
       ```
-   {% endraw %}
-
+      {% endraw %}
 5. Comprueba que la página sigue funcionado
 
 ### 1.2.2 Ruta `/about`
