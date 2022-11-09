@@ -116,12 +116,12 @@ Todas las páginas comparten la cabecera y el pie de página, así que vamos a c
       ```html
       </div><!-- End of index box -->
       ```
-  cópialo y sustitúyelo por:
-  {% raw %}
+      cópialo y sustitúyelo por:
+      {% raw %}
       ```twig
       {% block body %}{% endblock %}  
       ```
-  {% endraw %}
+      {% endraw %}
       Este es el código que va a variar entre página y página.
       El código cortado vamos a pegarlo en la página `index.html.twig` dentro del bloque `body`
       {% raw %}
@@ -182,13 +182,13 @@ Como habéis podido comprobar, el menú de navegación ha dejado de funcionar ya
 
 Vamos a crear una `partial` para la navegación.
 
-1. Identificamos el código de `base.html.twig` que pinta la navegación y lo movemos a `templates/partials/navigation.html.twig`
+1. Identificamos el código de `base.html.twig` que pinta la navegación y lo movemos a `templates/partials/_navigation.html.twig`. Por convención, los partials empiezan por `_`
 
 2. Modificamos `base.html.twig` para que incluya este partial
 {% raw %}
 
    ```twig
-   {{ include ('partials/navigation.html.twig')}}
+   {{ include ('partials/_navigation.html.twig')}}
    ```
 {% endraw %}
 3. Ya podemos modificar el partial para que apunte a las nuevas rutas. Hemos de usar la función de twig `path` que nos devuelve el path a una ruta con nombre. Nunca `harcodéis` las rutas que para eso se les asigna un nombre en el controlador. Ten en cuenta que la dirección de la ruta podría cambiar durante el desarrollo del proyecto pero el nombre no debería hacerlo.
@@ -212,10 +212,10 @@ Vamos a crear una `partial` para la navegación.
    ```
    {% endraw %}
 
-   Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`. `
+   Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`.
 
 
-Vamos a arreglarlo. Para ello hemos de conocer cuál es la ruta activa y añadir la clase `active` a dicha ruta. Existe la función `twig` `app.request.attributes.get('_route')` que nos devuelve dicha ruta.
+Vamos a arreglarlo. Para ello hemos de conocer cuál es la ruta activa y añadir la clase `active` a dicha ruta. Por suerte, existe la función `twig` `app.request.attributes.get('_route')` que nos devuelve dicha ruta.
 
 Por ejemplo, en el caso del enlace a `index` quedará así:
 {% raw %}
@@ -227,7 +227,7 @@ Por ejemplo, en el caso del enlace a `index` quedará así:
 
 {% endraw %}
 
-Estamos usando el **operador ternario**
+Estamos usando el **operador ternario** `(condition ? result when true : result when false)`
 
 {% raw %}
 
