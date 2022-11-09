@@ -25,7 +25,7 @@ composer create-project symfony/website-skeleton symfony-blog
 ```
 
 1. Descargar la [plantilla de la web](/symfony-blog-teoria/assets/photo-master.zip)
-2. Se descomprime en `public` 
+2. Se descomprime en `public`
 3. Comprueba que la web funciona
 
 ## 1.2 Definir las rutas
@@ -38,7 +38,7 @@ El primer paso es crear un **Controlador**
 php bin/console make:controller PageController
 ```
 
-Este controlador va a encargarse de la página de `portada` y de la página `about`. 
+Este controlador va a encargarse de la página de `portada` y de la página `about`.
 
 ### 1.2.1 Ruta `/`
 
@@ -101,36 +101,48 @@ Todas las páginas comparten la cabecera y el pie de página, así que vamos a c
    1. Uno para el título que va a variar en cada página:
       Localiza la etiqueta `title` y modifícala así:
    {% raw %}
-      
+
       ```twig
       <title>{% block title %}Inicio{% endblock %}</title>
       ```
       {% endraw %}
    2. Otro para el cuerpo de la página:
    Localiza el código entre
-   
+
       ```html
       <div id="index">
       ```
-   y 
+   y
       ```html
       </div><!-- End of index box -->
       ```
+  cópialo y sustitúyelo por:
+  {% raw %}
+     ```twig
+     {% block body %}{% endblock %}  
+     ```
+  {% endraw %}
    Este es el código que va a variar entre página y página. Por tanto vamos a moverlo a la página `index.html.twig` dentro del bloque `body`
 {% raw %}
-   
+
       ```twig
       {% block body %}
       //Código cortado de base.html.twig
       {% endblock %}
       ```
 {% endraw %}
+   Ya solo nos queda modificar el título de la página `/`.
+   {% raw %}
+      ```twig
+      {% block title %}Index{% endblock %}  
+      ```
+   {% endraw %}
 
 5. Comprueba que la página sigue funcionado
 
-### 1.2.2 Ruta `/about` 
+### 1.2.2 Ruta `/about`
 
-Creamos el controlador 
+Creamos el controlador
 
 ```php
 #[Route('/about', name: 'about')]
@@ -168,20 +180,20 @@ Como habéis podido comprobar, el menú de navegación ha dejado de funcionar ya
 
 ![image-20220316092852146](/symfony-blog-teoria/assets/img/primeros-pasos/image-20220316092852146.png)
 
-Vamos a crear una `partial` para la navegación. 
+Vamos a crear una `partial` para la navegación.
 
 1. Identificamos el código de `base.html.twig` que pinta la navegación y lo movemos a `templates/partials/navigation.html.twig`
 
 2. Modificamos `base.html.twig` para que incluya este partial
 {% raw %}
-   
+
    ```twig
    {{ include ('partials/navigation.html.twig')}}
    ```
 {% endraw %}
 3. Ya podemos modificar el partial para que apunte a las nuevas rutas. Hemos de usar la función de twig `path` que nos devuelve el path a una ruta con nombre. Nunca `harcodéis` las rutas que para eso se les asigna un nombre en el controlador. Ten en cuenta que la dirección de la ruta podría cambiar durante el desarrollo del proyecto pero el nombre no debería hacerlo.
 {% raw %}
-   
+
    ```twig
    <ul class="nav navbar-nav">
        <li class="active lien"><a href="{{ path('index') }}">
@@ -199,11 +211,11 @@ Vamos a crear una `partial` para la navegación.
    </ul>
    ```
    {% endraw %}
-   
+
    Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`. `
 
 
-Vamos a arreglarlo. Para ello hemos de conocer cuál es la ruta activa y añadir la clase `active` a dicha ruta. Existe la función `twig` `app.request.attributes.get('_route')` que nos devuelve dicha ruta. 
+Vamos a arreglarlo. Para ello hemos de conocer cuál es la ruta activa y añadir la clase `active` a dicha ruta. Existe la función `twig` `app.request.attributes.get('_route')` que nos devuelve dicha ruta.
 
 Por ejemplo, en el caso del enlace a `index` quedará así:
 {% raw %}
@@ -213,9 +225,9 @@ Por ejemplo, en el caso del enlace a `index` quedará así:
 <a href="{{ path('index') }}"><i class="fa fa-home sr-icons"></i> Home</a></li>
    ```
 
-{% endraw %} 
+{% endraw %}
 
-Estamos usando el **operador ternario** 
+Estamos usando el **operador ternario**
 
 {% raw %}
 
@@ -225,7 +237,7 @@ Estamos usando el **operador ternario**
 
 {% endraw %}
 
-### 1.3.1 Reto 
+### 1.3.1 Reto
 
 >-reto-Modifica la navegación para cada una de las rutas. Ten en cuenta que el menú `blog` se debe activar para las rutas `blog` y `single_post`
 >
