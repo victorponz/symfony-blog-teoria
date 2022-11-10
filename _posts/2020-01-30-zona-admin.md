@@ -382,10 +382,10 @@ Ahora vamos a añadir clases a los campos para que tenga el mismo aspecto visual
 public function buildForm(FormBuilderInterface $builder, array $options): void
 {
     $builder
-        ->add('File')
-        ->add('NumLikes', null, ['attr' => ['class'=>'form-control']])
-        ->add('NumViews', null, ['attr' => ['class'=>'form-control']])
-        ->add('NumDownloads', null, ['attr' => ['class'=>'form-control']])
+        ->add('file')
+        ->add('numLikes', null, ['attr' => ['class'=>'form-control']])
+        ->add('numViews', null, ['attr' => ['class'=>'form-control']])
+        ->add('numDownloads', null, ['attr' => ['class'=>'form-control']])
         ->add('category', EntityType::class, array(
             'class' => Category::class,
             'choice_label' => 'name'))
@@ -404,7 +404,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 ...
 $builder
-    ->add('File', FileType::class,[
+    ->add('file', FileType::class,[
         'mapped' => false,
         'constraints' => [
             new File([
