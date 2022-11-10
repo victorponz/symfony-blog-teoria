@@ -221,12 +221,13 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
     return $this->render('admin/categories.html.twig', array(
         'form' => $form->createView() 
     ));
-
 }
 ```
 **Plantilla**
 
 ![image-20220322203344623](/symfony-blog-teoria/assets/img/admin/image-20220322203344623.png)
+
+### 4.4.3 Listado de categorías
 
 También vamos a mostrar una lista con todas las categorías:
 
@@ -286,7 +287,7 @@ Y modificamos la plantilla para recorrer las categorías:
 </div>
 ```
 {% endraw %}
-### 4.4.3 Entidad `Image`
+### 4.4.4 Entidad `Image`
 
 Como antes, vamos a crear la entidad `Image` que tiene una clave ajena a `Category`. Por ello, cuando definamos la entidad hemos de indicar que el campo `Category` es una `Relation` de tipo `ManyToOne`
 
@@ -325,7 +326,7 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
         ->add('numLikes')
         ->add('numViews')
         ->add('numDownloads')
-        ->add('ategory', EntityType::class, array(
+        ->add('category', EntityType::class, array(
             'class' => Category::class,
             'choice_label' => 'name'))
     ;
@@ -375,7 +376,7 @@ Vamos a probar que funciona:
 
 ![image-20220322174001982](/symfony-blog-teoria/assets/img/admin/image-20220322174001982.png)
 
-Ahora vamos a añadir clases a los campos para que tenga el mismo aspecto visual que el resto de la aplicación, pero esta vez lo haremos en el propio formulario:
+Ahora vamos a añadir clases a los campos para que tenga el mismo aspecto visual que el resto de la aplicación, pero esta vez lo haremos en el propio formulario, que es otra de las opciones de las que disponemos para configurar los campos. Se puede usar cualquiera de ellas.
 
 ```php
 public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -393,7 +394,7 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
 }
 ```
 
-### 4.4.4 Subir imágenes al servidor
+### 4.4.5 Subir imágenes al servidor
 
 El truco para que el campo `file` sea de tipo `input file` es decirle a Symfony que no esté mapeado de tal forma que no lo guarde automáticamente:
 
@@ -469,7 +470,7 @@ parameters:
     portfolio_directory: '%kernel.project_dir%/public/images/index/portfolio'
 ```
 
-### 4.4.5 RETO
+### 4.4.6 RETO
 
 Crea la lista con las imágenes:
 
@@ -491,9 +492,7 @@ Antes de nada, carga este archivo [sql](assets/images.sql) que contiene las inst
 Ahora modificamos el controlador para obtener todas las categorías:
 
 ```php
-/**
- * @Route("/", name="index")
- */
+#[Route('/', name: 'index')]
 public function index(ManagerRegistry $doctrine, Request $request): Response
 {
     $repository = $doctrine->getRepository(Category::class);
@@ -589,7 +588,6 @@ Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
           </div>
         </div>
         </div> 
-
       </div>
     </div>
 <!-- End of First category pictures -->
@@ -658,6 +656,3 @@ Y modificamos `index.html.twig`
 {% endfor %}
 ```
 {% endraw %}
-**Más información en**
-
-[https://symfony.com/doc/current/security.html](https://symfony.com/doc/current/security.html)
