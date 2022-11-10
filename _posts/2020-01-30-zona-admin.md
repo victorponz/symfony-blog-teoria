@@ -355,8 +355,6 @@ Creamos el controlador:
 #[Route('/admin/images', name: 'app_images')]
 public function images(ManagerRegistry $doctrine, Request $request): Response
 {
-    $repository = $doctrine->getRepository(Image::class);
-    $images = $repository->findAll();
     $image = new Image();
     $form = $this->createForm(ImageFormType::class, $image);
     $form->handleRequest($request);
@@ -367,8 +365,7 @@ public function images(ManagerRegistry $doctrine, Request $request): Response
         $entityManager->flush();
     }
     return $this->render('admin/images.html.twig', array(
-        'form' => $form->createView(),
-        'images' => $images   
+        'form' => $form->createView()
     ));
 }
 ```
@@ -430,7 +427,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 ...
 if ($form->isSubmitted() && $form->isValid()) {
-    $file = $form->get('File')->getData();
+    $file = $form->get('file')->getData();
     if ($file) {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         // this is needed to safely include the file name as part of the URL
@@ -542,60 +539,7 @@ Eliminamos el siguiente HTML porque de momento no vamos a paginar las imágenes:
 ```
 Y ahora vamos a recorrer todas las imágenes.
 
-Primero eliminamos todo el código repetido y dejamos sólo el mínimo:
-
-```html
-<div class="tab-content">
-
-<!-- First Category pictures -->
-    <div id="category1" class="tab-pane active" >
-      <div class="row popup-gallery">
-        <div class="col-xs-12 col-sm-6 col-md-3">
-        <div class="sol">
-          <img class="img-responsive" src="images/index/portfolio/1.jpg" alt="First category picture">
-          <div class="behind">
-              <div class="head text-center">
-                <ul class="list-inline">
-                  <li>
-                    <a class="gallery" href="images/index/gallery/1.jpg" data-toggle="tooltip" data-original-title="Quick View">
-                      <i class="fa fa-eye"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
-                      <i class="fa fa-heart"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" data-toggle="tooltip" data-original-title="Download">
-                      <i class="fa fa-download"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" data-toggle="tooltip" data-original-title="More information">
-                      <i class="fa fa-info"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div class="row box-content">
-                <ul class="list-inline text-center">
-                  <li><i class="fa fa-eye"></i> 1000</li>
-                  <li><i class="fa fa-heart"></i> 500</li>
-                  <li><i class="fa fa-download"></i> 100</li>
-                </ul>
-              </div>
-          </div>
-        </div>
-        </div> 
-      </div>
-    </div>
-<!-- End of First category pictures -->
-
-</div>
-```
-
-Y ahora creamos un partial para la imagen:
+Primero eliminamos todo el código repetido que pinta las tres pestañas de categorías y creamos un partial para la imagen `partials/_image.html.twig`:
 
 {% raw %}
 ```twig
@@ -640,7 +584,7 @@ Y ahora creamos un partial para la imagen:
 ```
 {% endraw %}
 
-Y modificamos `index.html.twig` 
+Y modificamos `index.html.twig`  para mostrar las tres pestañas:
 
 {% raw %}
 ```twig
@@ -649,10 +593,13 @@ Y modificamos `index.html.twig`
     <div id="category{{category.id}}" class="tab-pane {{loop.first ? 'active' : ''}}" >
       <div class="row popup-gallery">
       {% for image in category.images %}
-      {{ include ('partials/image.html.twig')}}
+      {{ include ('partials/_image.html.twig')}}
       {% endfor %}
         </div>
     </div>
 {% endfor %}
 ```
 {% endraw %}
+
+
+
