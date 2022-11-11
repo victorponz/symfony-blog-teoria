@@ -10,6 +10,8 @@ title: Zona de administración
 render_with_liquid: false
 ---
 
+![](/symfony-blog-teoria/assets/img/admin/Crea un blog v4.png)
+
 ## 4 Qué aprenderemos
 
 * A dar permisos de administrador a un usuario
@@ -18,11 +20,13 @@ render_with_liquid: false
 * A usar métodos del repositorio
 * A crear relaciones entre entidades
 * A subir imágenes al servidor
-* A copiar imágenes
+* A mostrar imágenes
 
 ## 4.1 Usuario administrador
 
-En el punto 3, vimos cómo gestionar usuarios. Hemos dado de alta algunos usuarios pero ninguno tiene el rol `administrador`. Vamos a dar este rol al usuario con `id` **1**. 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HposhKjcxgU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+En el [punto 3](https://victorponz.github.io/symfony-blog-teoria/gestion-de-usuarios), vimos cómo gestionar usuarios. Hemos dado de alta algunos usuarios pero ninguno tiene el rol `administrador`. Vamos a dar este rol al usuario con `id` **1**. 
 
 En pypMyAdmin ejecuta el siguiente sql:
 
@@ -144,6 +148,8 @@ Si el usuario no ha iniciado sesión se redirige automáticamente a la página d
 > ```
 
 ## 4.4 Gestión de imágenes
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HposhKjcxgU?start=268" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 En este apartado vamos a implementar la subida de imágenes para la página de portada.
 
@@ -289,6 +295,8 @@ Y modificamos la plantilla para recorrer las categorías:
 {% endraw %}
 ### 4.4.4 Entidad `Image`
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HposhKjcxgU?start=563" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 Como antes, vamos a crear la entidad `Image` que tiene una clave ajena a `Category`. Por ello, cuando definamos la entidad hemos de indicar que el campo `Category` es una `Relation` de tipo `ManyToOne`
 
 <script id="asciicast-DCh9Ui5o5MdQpaZ20WQO2wyOj" src="https://asciinema.org/a/DCh9Ui5o5MdQpaZ20WQO2wyOj.js" async></script>
@@ -392,6 +400,8 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
 ```
 
 ### 4.4.5 Subir imágenes al servidor
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HposhKjcxgU?start=780" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 El truco para que el campo `file` sea de tipo `input file` es decirle a Symfony que no esté mapeado de tal forma que no lo guarde automáticamente:
 
