@@ -464,8 +464,15 @@ if ($form->isSubmitted() && $form->isValid()) {
         $image->setFile($newFilename);
     }
     $image = $form->getData();   
-    
-...
+    $entityManager = $doctrine->getManager();    
+    $entityManager->persist($image);
+    $entityManager->flush();
+}
+return $this->render('admin/images.html.twig', array(
+            'form' => $form->createView(),
+            'images' => $images   
+        ));
+
 ```
 
 Y definir la ruta a las imágenes en `config/services.yml`
