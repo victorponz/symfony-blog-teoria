@@ -1,11 +1,7 @@
 ---
-layout: default
+layout: home
 title: Symfony blog - Paso a paso
 ---
-<h1>Symfony blog - Paso a Paso</h1>
-    <blockquote>
-      En este tutorial vamos a aprender a crear un blog paso a paso.
-    </blockquote>
     <ol>
     {% for post in site.posts reversed %}
       <li><h4><a href="{{site.baseurl}}{{ post.url }}">{{ post.title }}</a></h4></li>
