@@ -128,7 +128,8 @@ body {
 
 #menuFixed a.active {
   border-left: 1px solid #fafafa;
-  color: #4183c4; }
+  color: var(--primary-color)
+}
 
 .md-toc-h1 .md-toc-inner {
   font-weight: inherit; }
@@ -383,10 +384,6 @@ video {
 .PageNavigation a, #menu a{
   font-size:inherit;
 }
-#menuContainer code.highlighter-rouge{
-  background-color: transparent;
-}
-
 textarea,
 input[type="text"] {
 	width: 100%;
