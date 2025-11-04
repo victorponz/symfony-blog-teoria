@@ -494,8 +494,11 @@ Para obtener el nombre de la imagen usa:
 `{{ asset('images/index/gallery/' ~ image.file) }}`
 {% endraw %}
 
-
 ![image-20220322195732035](/symfony-blog-teoria/assets/img/admin/image-20220322195732035.png)
+
+### 4.4.7 RETO
+Usa un servicio de almacenamiento en la nube, como [Cloudinary](cloudinary.com), para trabajar con su api de gestión de imágenes.
+
 
 ## 4.5 Página de portada.
 
