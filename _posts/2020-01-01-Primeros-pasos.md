@@ -21,12 +21,19 @@ permalink: primeros-pasos
 ## 1.1 Crear un proyecto
 
 ```
-composer create-project symfony/website-skeleton symfony-blog
+composer create-project symfony/skeleton:"6.4.*" symfony-blog
+```
+E instalar los componentes necesarios:
+```
+composer require symfony/maker-bundle --dev
+composer require symfony/twig-bundle
+composer require symfony/asset
 ```
 
 1. Descargar la [plantilla de la web](/symfony-blog-teoria/assets/photo-master.zip)
 2. Se descomprime en `public`
-3. Comprueba que la web funciona
+3. Inicia el servidor
+4. Comprueba que la web funciona visitando 127.0.0.1:8080/index.html
 
 ## 1.2 Definir las rutas
 
@@ -56,10 +63,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class PageController extends AbstractController
 {
     #[Route('/page', name: 'app_page')]
-    public function index(): Response
+    public function index(): JsonResponse
     {
-        return $this->render('page/index.html.twig', [
-            'controller_name' => 'PageController',
+        return $this->json([
+            'message' => 'Welcome to your new controller!',
+            'path' => 'src/Controller/PageController.php',
         ]);
     }
 }
@@ -191,7 +199,7 @@ Vamos a crear una `partial` para la navegación.
    {{ include ('partials/_navigation.html.twig')}}
    ```
 {% endraw %}
-3. Ya podemos modificar el partial para que apunte a las nuevas rutas. Hemos de usar la función de twig `path` que nos devuelve el path a una ruta con nombre. Nunca `harcodéis` las rutas que para eso se les asigna un nombre en el controlador. Ten en cuenta que la dirección de la ruta podría cambiar durante el desarrollo del proyecto pero el nombre no debería hacerlo.
+3. Ya podemos modificar el partial para que apunte a las nuevas rutas. Hemos de usar la función de twig `path` que nos devuelve el path a una ruta con nombre. Nunca `harcodeéis` las rutas que para eso se les asigna un nombre en el controlador. Ten en cuenta que la dirección de la ruta podría cambiar durante el desarrollo del proyecto pero el nombre no debería hacerlo.
 {% raw %}
 
    ```twig
