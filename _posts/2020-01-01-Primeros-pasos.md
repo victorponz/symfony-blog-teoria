@@ -28,6 +28,7 @@ E instalar los componentes necesarios:
 composer require symfony/maker-bundle --dev
 composer require symfony/twig-bundle
 composer require symfony/asset
+composer require symfony/profiler-pack
 ```
 
 1. Descargar la [plantilla de la web](/symfony-blog-teoria/assets/photo-master.zip)
