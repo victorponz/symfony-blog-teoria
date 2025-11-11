@@ -133,7 +133,7 @@ Todas las páginas comparten la cabecera y el pie de página, así que vamos a c
       ```
       {% endraw %}
       Este es el código que va a variar entre página y página.
-      El código cortado vamos a pegarlo en la página `index.html.twig` dentro del bloque `body`
+      El código cortado vamos a pegarlo en la plantilla `index.html.twig` dentro del bloque `body`
       {% raw %}
 
       ```twig
@@ -170,11 +170,10 @@ Movemos la página `about.html ` a `/templates/page/about.html.twig`
 {% block title%}About{% endblock %}
 {% block body%}
 <!-- Principal Content Start-->
-//Código html de about
+// Pega aquí el código html de about
 <!-- End of principal content -->
 {% endblock %}
 ```
-
 {% endraw %}
 Comprueba que funciona la ruta `/about`
 
@@ -196,7 +195,6 @@ Vamos a crear una `partial` para la navegación.
 
 2. Modificamos `base.html.twig` para que incluya este partial
 {% raw %}
-
    ```twig
    {{ include ('partials/_navigation.html.twig')}}
    ```
@@ -222,8 +220,7 @@ Vamos a crear una `partial` para la navegación.
    ```
    {% endraw %}
 
-   Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`.
-
+Pero ahora lo que ocurre es que siempre está seleccionada la opción de menú `home` porque es la que tiene la clase css `active`.
 
 Vamos a arreglarlo. Para ello hemos de conocer cuál es la ruta activa y añadir la clase `active` a dicha ruta. Por suerte, existe la función `twig` `app.request.attributes.get('_route')` que nos devuelve dicha ruta.
 
