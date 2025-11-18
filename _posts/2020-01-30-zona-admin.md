@@ -116,9 +116,19 @@ Bloquear el acceso a toda una zona de nuestra web es tan sencillo como modificar
         - { path: ^/admin, roles: ROLE_ADMIN }
 ```
 
+También podemos bloquear acceso a todas los rutas de un controlador, anteponiendo la siguiente regla antes de la definición del mismo:
+```php
+#[IsGranted('ROLE_ADMIN)]
+final class PageController extends AbstractController
+...
+...
+```php
+
 > -alert-Como todos los archivos `yaml` es muy sensible a errores. Si Symfony empieza a dar errores extraños después de modificar un archivo de este tipo, revísalo
 
-Si lo que necesitamos es proteger el acceso a un controlador, usaríamos el siguiente código:
+Si lo que necesitamos es proteger el acceso a todas las rutas de un controlador, usaríamos el siguiente código:
+```php
+
 
 ```php
 public function adminDashboard(): Response
