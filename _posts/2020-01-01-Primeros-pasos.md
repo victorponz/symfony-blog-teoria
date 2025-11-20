@@ -30,6 +30,7 @@ composer require symfony/twig-bundle
 composer require symfony/asset
 composer require symfony/orm-pack
 composer require symfony/profiler-pack
+composer require form security validator
 ```
 
 1. Descargar la [plantilla de la web](/symfony-blog-teoria/assets/photo-master.zip)
