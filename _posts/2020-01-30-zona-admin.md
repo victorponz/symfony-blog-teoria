@@ -120,16 +120,12 @@ También podemos bloquear acceso a todas los rutas de un controlador, anteponien
 ```php
 #[IsGranted('ROLE_ADMIN)]
 final class PageController extends AbstractController
-...
-...
-```php
+```
 
 > -alert-Como todos los archivos `yaml` es muy sensible a errores. Si Symfony empieza a dar errores extraños después de modificar un archivo de este tipo, revísalo
 
-Si lo que necesitamos es proteger el acceso a todas las rutas de un controlador, usaríamos el siguiente código:
+Si lo que necesitamos es proteger el acceso a alguna ruta de un controlador, usaríamos el siguiente código delante de cada una de ellos:
 ```php
-
-
 ```php
 public function adminDashboard(): Response
 {
@@ -413,6 +409,12 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HposhKjcxgU?start=780" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+Antes de nada, hay que instalar un componte que permite inspeccionar de qué `mime type` es un archivo
+
+```
+composer require symfony/mime
+```
+
 El truco para que el campo `file` sea de tipo `input file` es decirle a Symfony que no esté mapeado de tal forma que no lo guarde automáticamente:
 
 ```php
@@ -438,51 +440,53 @@ $builder
 Ahora ya sólo nos queda modificar el controlador:
 
 ```php
-...
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\String\Slugger\SluggerInterface;
-...
+    #[Route('/admin/images', name: 'app_images')]
+    public function images(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
+    {
+        $image = new Image();
+        $form = $this->createForm(ImageFormType::class, $image);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+            if ($file) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                // El Slugger hace que el nombre del archivo sea seguro en cuanto a 
+                // caracteres especiales como espacios o acentos
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
-...
-if ($form->isSubmitted() && $form->isValid()) {
-    $file = $form->get('file')->getData();
-    if ($file) {
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        // this is needed to safely include the file name as part of the URL
-        $safeFilename = $slugger->slug($originalFilename);
-        $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+                // El servidor almacena el archivo en un directorio temporal y
+                // debemos moverlo a su ubicación definitiva, dentro de una ruta que
+                // hemos definido en los parámetros de configuración (services.yaml)
+                // y que debe existir previamente dentro de la carpeta `public` proyecto
+                try {
 
-        // Move the file to the directory where images are stored
-        try {
+                    // Primero lo movemos al directorio de imágenes
+                    $file->move(
+                        $this->getParameter('images_directory'), $newFilename
+                    );
+                    $filesystem = new Filesystem();
+                    // Y ahora lo duplicamos en el directorio de portfolio
+                    $filesystem->copy(
+                        $this->getParameter('images_directory') . '/'. $newFilename, 
+                        $this->getParameter('portfolio_directory') . '/'.  $newFilename, true);
 
-            $file->move(
-                $this->getParameter('images_directory'), $newFilename
-            );
-            $filesystem = new Filesystem();
-            $filesystem->copy(
-                $this->getParameter('images_directory') . '/'. $newFilename, 
-                $this->getParameter('portfolio_directory') . '/'.  $newFilename, true);
+                } catch (FileException $e) {
+                    return new Response("Error al subir el archivo: " . $e->getMessage());
+                }
 
-        } catch (FileException $e) {
-            // ... handle exception if something happens during file upload
+                // asignamos el nombre del archivo, que se llama `file`, a la entidad Image
+                $image->setFile($newFilename);
+            }
+            $image = $form->getData();   
+            $entityManager = $doctrine->getManager();    
+            $entityManager->persist($image);
+            $entityManager->flush();
         }
-
-        // updates the 'file$filename' property to store the PDF file name
-        // instead of its contents
-        $image->setFile($newFilename);
+        return $this->render('admin/images.html.twig', array(
+                        'form' => $form->createView()
+                    ));
     }
-    $image = $form->getData();   
-    $entityManager = $doctrine->getManager();    
-    $entityManager->persist($image);
-    $entityManager->flush();
-}
-return $this->render('admin/images.html.twig', array(
-            'form' => $form->createView(),
-            'images' => $images   
-        ));
-
 ```
 
 Y definir la ruta a las imágenes en `config/services.yml`
