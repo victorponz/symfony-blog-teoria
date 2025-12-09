@@ -629,6 +629,7 @@ Y modificamos `index.html.twig`  para mostrar las tres pestañas:
         </div>
     </div>
 {% endfor %}
+</div>
 ```
 {% endraw %}
 
