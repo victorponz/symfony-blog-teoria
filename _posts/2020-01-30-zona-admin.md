@@ -28,7 +28,7 @@ render_with_liquid: false
 
 En el [punto 3](https://victorponz.github.io/symfony-blog-teoria/gestion-de-usuarios), vimos cómo gestionar usuarios. Hemos dado de alta algunos usuarios pero ninguno tiene el rol `administrador`. Vamos a dar este rol al usuario con `id` **1**. 
 
-En pypMyAdmin ejecuta el siguiente sql:
+Ejecuta el siguiente `sql` en el gestor de bases de datos que uses :
 
 ```sql
 UPDATE user SET roles = '["ROLE_ADMIN"]' WHERE id = 1;
