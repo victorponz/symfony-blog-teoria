@@ -265,7 +265,7 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
         $entityManager->flush();
         // redirigimos a la misma ruta para que se vea la nueva categoría añadida 
         // y no se repita el envío del formulario al recargar la página
-        $this->redirectToRoute('app_categories');
+        return $this->redirectToRoute('app_categories');
     }
 
     return $this->render('admin/categories.html.twig', array(
