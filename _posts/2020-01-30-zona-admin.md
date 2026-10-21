@@ -252,10 +252,6 @@ Modificamos el controlador para recuperar todas las categorías de la base de da
 #[Route('/admin/categories', name: 'app_categories')]
 public function categories(ManagerRegistry $doctrine, Request $request): Response
 {
-    $repositorio = $doctrine->getRepository(Category::class);
-
-    $categories = $repositorio->findAll();
-
     $category = new Category();
     $form = $this->createForm(CategoryFormType::class, $category);
     $form->handleRequest($request);
@@ -265,11 +261,15 @@ public function categories(ManagerRegistry $doctrine, Request $request): Respons
         $entityManager->persist($category);
         $entityManager->flush();
     }
+
+    // Al hacerlo aquí modo obtenemos la última creada con el form (si se ha enviado)
+    $repositorio = $doctrine->getRepository(Category::class);
+    $categories = $repositorio->findAll();
+
     return $this->render('admin/categories.html.twig', array(
         'form' => $form->createView(),
         'categories' => $categories   
     ));
-
 }
 ```
 
